@@ -1,0 +1,10 @@
+## IDF Component Manager Manifest File
+dependencies:
+  # For using old RMT driver
+  led_strip:
+    path: "./led_strip"
+    version: "*"
+    git: "git@github.com:kaspernyhus/esp_components.git"
+
+  # Use new RMT driver
+  # espressif/led_strip: "^2.5.2"

@@ -1,0 +1,83 @@
+menu "Wi-Fi Manager"
+
+    choice WIFI_MGR_PROVISIONING_METHOD
+        depends on !ESP_DISABLE_WIFI
+        prompt "Provisioning method"
+        default WIFI_MGR_KCONFIG_CREDENTIALS
+        help
+            Select provisioning or enter ssid and password here
+        config WIFI_MGR_ESP_PROV
+            bool "Espressif Provisioning"
+        config WIFI_MGR_CUSTOM_PROV
+            bool "Custom Provisioning"
+        config WIFI_MGR_KCONFIG_CREDENTIALS
+            bool "Hardcoded credentials"
+    endchoice
+
+    config WIFI_MGR_ESP_PROV_SERVICE_NAME
+        depends on WIFI_MGR_ESP_PROV
+        string "Service Name"
+        default "espressif"
+        help
+            Service name
+
+    config WIFI_MGR_PROV_MAX_TIME
+        depends on WIFI_MGR_ESP_PROV || WIFI_MGR_CUSTOM_PROV
+        int "Provision mode timeout [minutes]"
+        default 15
+        help
+            Max time in active provision mode [minutes] before timeout
+
+    config WIFI_MGR_ESP_WIFI_SSID
+        depends on WIFI_MGR_KCONFIG_CREDENTIALS
+        string "WiFi SSID"
+        default "myssid"
+        help
+            SSID (network name) for the example to connect to.
+
+    config WIFI_MGR_ESP_WIFI_PASSWORD
+        depends on WIFI_MGR_KCONFIG_CREDENTIALS
+        string "WiFi Password"
+        default "mypassword"
+        help
+            WiFi password (WPA or WPA2) for the example to use.
+
+    choice WIFI_MGR_SCAN_AUTH_MODE_THRESHOLD
+        depends on WIFI_MGR_KCONFIG_CREDENTIALS
+        prompt "WiFi Scan auth mode threshold"
+        default ESP_WIFI_AUTH_OPEN
+        help
+            The weakest authmode to accept in the scan mode.
+
+        config ESP_WIFI_AUTH_OPEN
+            bool "OPEN"
+        config ESP_WIFI_AUTH_WEP
+            bool "WEP"
+        config ESP_WIFI_AUTH_WPA_PSK
+            bool "WPA PSK"
+        config ESP_WIFI_AUTH_WPA2_PSK
+            bool "WPA2 PSK"
+        config ESP_WIFI_AUTH_WPA_WPA2_PSK
+            bool "WPA/WPA2 PSK"
+        config ESP_WIFI_AUTH_WPA3_PSK
+            bool "WPA3 PSK"
+        config ESP_WIFI_AUTH_WPA2_WPA3_PSK
+            bool "WPA2/WPA3 PSK"
+        config ESP_WIFI_AUTH_WAPI_PSK
+            bool "WAPI PSK"
+    endchoice
+
+    config WIFI_MGR_FORCE_CREDENTIALS
+        depends on WIFI_MGR_KCONFIG_CREDENTIALS
+        bool "Force new credentials"
+        default false
+        help
+            Force these credentials on every boot
+
+    config WIFI_MGR_ESP_MAXIMUM_RETRY
+        int "Maximum retry"
+        default 5
+        help
+            Set the Maximum retry to avoid station reconnecting to the AP unlimited when the AP is really inexistent.
+
+endmenu

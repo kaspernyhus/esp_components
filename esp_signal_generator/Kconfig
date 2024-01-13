@@ -1,0 +1,136 @@
+menu "ESP Signal Generator"
+    config ENABLE_ESP_SIGNAL_GENERATOR
+        bool "Use ESP Signal Generator"
+        default n
+        help
+            Enable esp_signal_generator component
+
+    if ENABLE_ESP_SIGNAL_GENERATOR
+        config ESP_SIG_GEN_DEF_SAMPLE_RATE
+            int "Sample rate"
+            range 1 96000
+            default 48000
+            help
+                Default sample rate [1 - 96000]
+
+        config ESP_SIG_GEN_CHANNELS
+            int "Channels"
+            range 1 4
+            default 1
+            help
+                Default number of channels
+
+        config ESP_SIG_GEN_DEF_VOLUME
+            int "Volume"
+            range 0 100
+            default 80
+            help
+                Default volume [0-100]
+
+        choice ESP_SIG_GEN_DEF_WAVE
+            prompt  "Waveform"
+            default ESP_SIG_GEN_SINE
+            help
+                Default waveform
+            config ESP_SIG_GEN_SINE
+                bool "Sine"
+            config ESP_SIG_GEN_SINE_TAB
+                bool "Sine (lookup table)"
+            config ESP_SIG_GEN_PINK_NOISE
+                bool "Pink noise"
+            config ESP_SIG_GEN_SILENCE
+                bool "Silence"
+        endchoice
+
+        config ESP_SIG_GEN_DEF_FREQ
+            depends on ESP_SIG_GEN_SINE || ESP_SIG_GEN_SINE_TAB
+            int "Frequency"
+            range 1 20000
+            default 440
+            help
+                Default frequency
+
+        config ESP_SIG_GEN_DEF_FREQ_CH2
+            depends on ESP_SIG_GEN_CHANNELS = 2
+            int "Frequency CH2"
+            range 1 20000
+            default 440
+            help
+                Default frequency for channel 2
+
+        choice ESP_SIG_GEN_DEF_BITDEPTH
+            prompt  "Bitdepth"
+            default ESP_SIG_GEN_16
+            help
+                Default sample bitdepth
+            config ESP_SIG_GEN_16
+                bool "16bit"
+            config ESP_SIG_GEN_24
+                bool "24bit (32bit width)"
+            config ESP_SIG_GEN_24_3
+                bool "24bit (packed)"
+            config ESP_SIG_GEN_32
+                bool "32bit"
+        endchoice
+
+        choice ESP_SIG_GEN_DEF_PADDING
+            depends on ESP_SIG_GEN_24
+            prompt "Padding"
+            default ESP_SIG_GEN_PADDING_MSB
+            help
+                For 24/32 padding byte LSB (0x------00) or MSB (0x00------)
+            config ESP_SIG_GEN_PADDING_MSB
+                bool "MSB"
+            config ESP_SIG_GEN_PADDING_LSB
+                bool "LSB"
+        endchoice
+
+        config ESP_SIG_GEN_SIGN_EXT
+            depends on ESP_SIG_GEN_24
+            bool "Sign extension"
+            default n
+            help
+                Enable sign extension (otherwise zero extended)
+
+        choice ESP_SIG_GEN_DEF_ENDIANESS
+            prompt  "Endianess"
+            default ESP_SIG_GEN_LE
+            help
+                Default sample endianess
+            config ESP_SIG_GEN_LE
+                bool "LE"
+            config ESP_SIG_GEN_BE
+                bool "BE"
+        endchoice
+
+        choice ESP_SIG_GEN_DEF_LAYOUT
+            prompt  "Channel layout"
+            default ESP_SIG_GEN_INTERLEAVED
+            help
+                Default layout
+            config ESP_SIG_GEN_INTERLEAVED
+                bool "Interleaved"
+            config ESP_SIG_GEN_NON_INTERLEAVED
+                bool "Non-Interleaved"
+        endchoice
+
+        choice ESP_SIG_GEN_DEF_METHOD
+            prompt  "Generation method"
+            default ESP_SIG_GEN_PULL
+            help
+                Default method
+            config ESP_SIG_GEN_PULL
+                bool "Pull"
+            config ESP_SIG_GEN_PUSH
+                bool "Push"
+        endchoice
+
+        config ESP_SIG_GEN_PUSH_INTERVAL
+            depends on ESP_SIG_GEN_PUSH
+            int "Push interval [ms]"
+            default 5
+            help
+                Default push interval in ms
+
+    endif # ESP_SIGNAL_GENERATOR
+endmenu # "TinyUSB Stack"

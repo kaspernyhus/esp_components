@@ -1,0 +1,4 @@
+## IDF Component Manager Manifest File
+dependencies:
+  esp_wifi_manager:
+    override_path: '../../'
